@@ -1,0 +1,5 @@
+<launch>
+
+<node name="ImagePublisher" pkg="ros_vision" type="image_publisher.py" output="screen" respawn="true"/>
+
+</launch>
