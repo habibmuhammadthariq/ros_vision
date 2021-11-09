@@ -9,6 +9,11 @@ import modul
 #note
 #knwon_width=19.5
 #focal_length=784.615384615
+class detect_an_object:
+    def __init__(self):
+        self.contours = []
+        self.bridge = CvBridge()
+        self.img_sub = bridge.Subscriber("/webcam", 
 
 def callback(data):
     #bridge = CvBridge()
