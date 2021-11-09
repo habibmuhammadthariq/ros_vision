@@ -6,6 +6,10 @@ import cv2
 import numpy as np
 import modul
 
+#note
+#knwon_width=19.5
+#focal_length=784.615384615
+
 def callback(data):
     #bridge = CvBridge()
     try:
@@ -25,9 +29,9 @@ def callback(data):
         cv2.line(modul.img, (cx_img,cy_img), (cx_frm,cy_frm), (255,255,255), 4)
 
         #finding distance from camera to image
-        focal_length, known_width = modul.finding_focal_length()
         detected_marker = modul.detail_object(marker,"biggest_contour")
-        distance = modul.distance_to_camera(known_width, focal_length, detected_marker[1][0])
+        #we can get focal_length using find_distance_from_camera_to_image.py file and of course we need to change any variable there
+        distance = modul.distance_to_camera(19.5, 784.615384615, detected_marker[1][0])
 
         #print out the result
         cv2.putText(modul.img, "distanece   : {} cm".format(distance), (30,25), cv2.FONT_HERSHEY_SIMPLEX, 0.65, (255,255,255), 2)
