@@ -8,6 +8,10 @@ cap = cv2.VideoCapture(0)
 print (cap.isOpened())
 bridge = CvBridge()
 
+cap.set(cv2.CAP_PROP_FPS, 5)
+fps = cap.get(5)
+print("Frames per second : {}".format(fps))
+
 def talker():
     pub = rospy.Publisher('/webcam', Image, queue_size = 1)
     rospy.init_node('ImagePublisher', anonymous = False)
@@ -21,8 +25,9 @@ def talker():
         msg = bridge.cv2_to_imgmsg(image, 'bgr8')
         pub.publish(msg)
 
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            cap.release()
+        # cv2.waitKey(10)
+        # if cv2.waitKey(1) & 0xFF == ord('q'):
+            # cap.release()
 
 if __name__ == '__main__':
     try:
