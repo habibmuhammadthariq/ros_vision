@@ -10,6 +10,7 @@ DISTANCE_TOLERANCE = 0.25
 WARP_DIM = 300
 SMALL_DIM = 29
 
+
 # global variable
 # global qr_center, image_center
 
@@ -21,6 +22,7 @@ def count_children(hierarchy, parent, inner=False):
         return count_children(hierarchy, hierarchy[parent][2], True)
     return 1 + count_children(hierarchy, hierarchy[parent][0], True) + count_children(hierarchy, hierarchy[parent][2],
                                                                                       True)
+
 
 def has_square_parent(hierarchy, squares, parent):
     if hierarchy[parent][3] == -1:
@@ -46,6 +48,7 @@ def get_midpoint(p1, p2):
     return [(p1[0] + p2[0]) / 2, (p1[1] + p2[1]) / 2]
 
 
+"""
 def get_farthest_points(contour, center):
     distances = []
     distances_to_points = {}
@@ -73,6 +76,7 @@ def line_intersection(line1, line2):
     x = det(d, x_diff) / div
     y = det(d, y_diff) / div
     return [int(x), int(y)]
+"""
 
 
 def extend(a, b, length, int_represent=False):
@@ -114,7 +118,7 @@ def distance_to_camera():
     return (known_width * focal_length) / contour_width
 
 
-def get_direction(): # this function need both image_center and qr_center
+def get_direction():  # this function need both image_center and qr_center
     direction = ""
     distance = distance_to_camera()
     # print("distance : %s" % distance)
@@ -126,7 +130,7 @@ def get_direction(): # this function need both image_center and qr_center
     else:
         # if image_center[0] - 50 < qr_center[0] < image_center[0] + 50 \
         #         and image_center[1] - 50 < qr_center[1] < image_center[1] + 50:
-            # direction = "hover" # or forward
+        # direction = "hover" # or forward
         if image_center[0] > qr_center[0] + 50:
             direction = "left"
         elif image_center[0] < qr_center[0] - 50:
@@ -167,11 +171,11 @@ def extract(frame, debug=False):
     square_indices = []
 
     i = 0
-    detected = False # true if the contour get caught
+    detected = False  # true if the contour get caught
     for c in contours:
         # Approximate the contour
-        peri = cv2.arcLength(c, True)
-        area = cv2.contourArea(c)
+        peri = cv2.arcLength(c, True)  # perimeter/ keliling
+        area = cv2.contourArea(c)  # luas
         approx = cv2.approxPolyDP(c, 0.03 * peri, True)
 
         # Find all quadrilateral contours
@@ -180,7 +184,7 @@ def extract(frame, debug=False):
             if area > 25 and 1 - SQUARE_TOLERANCE < math.fabs(
                     (peri / 4) ** 2) / area < 1 + SQUARE_TOLERANCE and count_children(hierarchy[0],
                                                                                       i) >= 2 and has_square_parent(
-                    hierarchy[0], square_indices, i) is False:
+                hierarchy[0], square_indices, i) is False:
                 squares.append(approx)
                 square_indices.append(i)
         i += 1
@@ -208,7 +212,7 @@ def extract(frame, debug=False):
                 # math.fabs -> selisih. area_tolerance -> 0.15
 
         if len(similar) >= 2:
-            detected = True # contour get caught
+            detected = True  # contour get caught
             distances = []
             distances_to_contours = {}
             for sim in similar:

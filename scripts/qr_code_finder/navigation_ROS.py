@@ -22,6 +22,7 @@ def callback(data):
         direction = fc.get_direction()
         print("Next destination : {}".format(direction))
 
+    # show the image up
     cv2.imshow('Detected Image', detected_image)
     cv2.waitKey(1)
 
