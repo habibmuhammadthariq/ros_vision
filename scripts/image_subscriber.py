@@ -47,7 +47,9 @@ class listener:
         print ("this the image number : %d" % self.counter)
 
         self.now = rospy.get_rostime().secs
-        if (self.now-self.start)/60 > 0.5:
+	result = (self.now-self.start)/60.0
+	print('type  : {}. now : {}'.format(type(result), result))
+        if (self.now-self.start)/60.0 == 0.05:	# 3 seconds # 0.5 = 30 seconds, 1 = one minutes
             rospy.signal_shutdown("")
         # if self.counter == 10:
             # print 

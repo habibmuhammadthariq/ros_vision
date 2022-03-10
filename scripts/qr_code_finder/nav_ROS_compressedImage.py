@@ -6,17 +6,26 @@ import cv2
 import numpy as np
 import simple_find_contours as fc
 
+VERBOSE = False
 
 def callback(data):
+    if VERBOSE:
+        print ('received image of type: "%s"' % data.format)
+        
     bridge = CvBridge()
+    
     # get images from camera
     try:
-        cv_img = bridge.imgmsg_to_cv2(data, 'bgr8')
+        np_arr = np.fromstring(data.data, np.uint8)
+        cv_img = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
+        #cv_img = bridge.compressed_imgmsg_to_cv2(data, 'passthrough')
     except CvBridgeError as e:
         print(e)
+        
+    # temp
+    #cv2.imshow("hayoo", cv_img)
+    #cv2.waitKey(1)
     
-    rospy.loginfo("test")
-
     # get contour
     detected_image, status = fc.extract(cv_img, True)
     # get direction
@@ -29,19 +38,24 @@ def callback(data):
     cv2.waitKey(1)
 
     # publish detected object
+    msg = CompressedImage()
+    msg.header.stamp = rospy.Time.now()
+    msg.format = "jpeg"
+    msg.data = np.array(cv2.imencode('.jpg', detected_img)[1]).tostring()
     try:
-        img_pub.publish(bridge.cv2_to_imgmsg(detected_image, 'bgr8'))
+        img_pub.publish(msg)
     except CvBridgeError as e:
         print(e)
 
 
 def drone_navigation():
     global img_pub
-    rospy.loginfo("test pertama nih")
     rospy.init_node('drone_navigation', anonymous=True)
     rospy.Subscriber('/tello/image_raw/h264', CompressedImage, callback)
-    #rospy.Subscriber('/webcam', Image, callback)
-    img_pub = rospy.Publisher('/detected_object', Image, queue_size=1)
+    if VERBOSE:
+        print ('Subscribed to /tello/image_raw/h264')
+        
+    img_pub = rospy.Publisher('/detected_object', CompressedImage, queue_size=1)
     rospy.spin()
 
 

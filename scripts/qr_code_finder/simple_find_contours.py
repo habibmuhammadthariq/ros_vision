@@ -143,9 +143,9 @@ def get_direction():  # this function need both image_center and qr_center
             direction = "hover"
 
     # print the direction and distance on the frame
-    cv2.putText(output, f"distance : {distance}", (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 255), 1,
+    cv2.putText(output, "distance : {}".format(distance), (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 255), 1,
                 cv2.LINE_AA)
-    cv2.putText(output, f"direction : {direction}", (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 255), 1,
+    cv2.putText(output, "direction : {}".format(direction), (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 255), 1,
                 cv2.LINE_AA)
     return direction
 
@@ -165,7 +165,7 @@ def extract(frame, debug=False):
     gray = cv2.GaussianBlur(gray, (BLUR_VALUE, BLUR_VALUE), 0)
     edged = cv2.Canny(gray, 30, 200)
 
-    contours, hierarchy = cv2.findContours(edged.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    _, contours, hierarchy = cv2.findContours(edged.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
     squares = []
     square_indices = []
